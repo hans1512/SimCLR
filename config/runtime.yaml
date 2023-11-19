@@ -1,5 +1,5 @@
 # High-level options
-seed: 42                                  # Define the random seed for consistent results.
+seed: 123                                  # Define the random seed for consistent results.
 mlflow: false                             # Turn on/off mlflow for experiment tracking.
 multi_gpu: false                           # If true, uses DataParallel to distribute computation to multiple GPUs
 
