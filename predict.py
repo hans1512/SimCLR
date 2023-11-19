@@ -1,12 +1,18 @@
 import numpy as np
 import torch
 
-from load_embeddings import load
 from classification_head import ClassificationHead
 from tqdm import tqdm
 
 from utils.arguments import get_config, get_arguments
 from utils.utils import path_from_config
+
+
+def load(path: str) -> (np.ndarray, np.ndarray):
+    x = np.load(f'./embeddings/x{path}.npy')
+    y = np.load(f'./embeddings/y{path}.npy')
+    return x, y
+
 
 def predict(model, x, y):
     model.to('cuda')
@@ -25,7 +31,7 @@ def predict(model, x, y):
     print(f"Accuracy: {correct / len(predictions)}")
 
 
-if __name__ == "__main__":
+def start_prediction():
     config = get_config(get_arguments())
     save_path = path_from_config(config)
 
@@ -35,3 +41,5 @@ if __name__ == "__main__":
     model.load_state_dict(torch.load(f"./models/classification_head{save_path}.pth"))
 
     predict(model, x, y)
+
+start_prediction()
