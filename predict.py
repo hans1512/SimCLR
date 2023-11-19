@@ -19,9 +19,7 @@ def predict(model, x, y):
             predictions.append(np.argmax(_x.cpu().detach().numpy()))
 
     correct = 0
-    for i in range(len(predictions)):
-        if predictions[i] == y[i]:
-            correct += 1
+    correct += sum(predictions[i] == y[i] for i in range(len(predictions)))
 
     print(correct)
     print(f"Accuracy: {correct / len(predictions)}")

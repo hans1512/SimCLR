@@ -20,7 +20,7 @@ isDropout: false                  # Set True to use Dropout layer
 learning_rate: 0.001              # Learning rate for training
 dropout_rate: 0.5                 # Set dropout rate if Dropout is being used
 tau: 0.1                          # temperature parameter used in NTXentLoss
-batch_size: 256                   # Set batch size
+batch_size: 512                   # Set batch size
 epochs: 100                       # Number of epochs to use for training
 scheduler: false                  # If true, it will use scheduler for learning rate
 

@@ -12,19 +12,9 @@ class ClassificationHead(nn.Module):
         super(ClassificationHead, self).__init__()
         self.config = config
 
-        features_in = 0
-        if config["model_mode"] == "resnet50":
-            features_in = 2048
-        elif config["model_mode"] == "contrastive_encoder":
-           features_in = 512
-        else:
-            raise Exception("Invalid configuration")
-
+        features_in = 512
 
         self.lin1 = nn.Linear(features_in, 4096)
-        #self.lin2 = nn.Linear(4096, 4096)
-        #self.lin3 = nn.Linear(4096, 4096)
-        #self.lin4 = nn.Linear(4096, 4096)
         self.lin5 = nn.Linear(4096, 10)
         self.relu = nn.ReLU()
         self.sigmoid = nn.Sigmoid()
@@ -32,12 +22,6 @@ class ClassificationHead(nn.Module):
     def forward(self, x):
         x = self.lin1(x)
         x = self.relu(x)
-        #x = self.lin2(x)
-        #x = self.relu(x)
-        #x = self.lin3(x)
-        #x = self.relu(x)
-        #x = self.lin4(x)
-        #x = self.relu(x)
         x = self.lin5(x)
         x = self.sigmoid(x)
         return x
@@ -51,27 +35,24 @@ class ClassificationHead(nn.Module):
         optimizer = optim.SGD(self.parameters(), lr=0.001, momentum=0.9)
         criterion = nn.CrossEntropyLoss()
         for epoch in tqdm(range(10)):
-
-            optimizer.zero_grad()
             running_loss = 0.0
-            for i in range(len(_x)):
-                self.index_to_tensor(_y[i])
-                x = torch.tensor(_x[i]).to('cuda')
-                y = self.index_to_tensor(_y[i]).to('cuda')
+            for i, (x_val, y_val) in enumerate(zip(_x, _y)):
+                x = torch.tensor(x_val).to('cuda')
+                y = self.index_to_tensor(y_val).to('cuda')
 
+                optimizer.zero_grad()
                 out = self.forward(x)
                 loss = criterion(out, y)
                 loss.backward()
-
-                # print statistics
                 running_loss += loss.item()
-                if i % 16 == 0:
-                    optimizer.step()
-                    optimizer.zero_grad()
 
-                if i % 2000 == 1999:  # print every 2000 mini-batches
-                    print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
+                if i % 16 == 15:  # Adjust to perform the step after processing every 16 samples
+                    optimizer.step()
+
+                if i % 2000 == 1999:  # Log the running loss every 2000 samples
+                    print(f'[{epoch + 1}, {i + 1}] loss: {running_loss / 2000:.3f}')
                     running_loss = 0.0
+
             self.save()
 
     def save(self):
