@@ -15,8 +15,8 @@ def predict(model, x, y):
     with torch.no_grad():
         for i in tqdm(range(len(x))):
             _x = torch.tensor(x[i]).to("cuda")
-            _x = model(_x)
-            predictions.append(np.argmax(_x.cpu().detach().numpy()))
+            prediction = model(_x)
+            predictions.append(np.argmax(prediction.cpu().detach().numpy()))
 
     correct = 0
     correct += sum(predictions[i] == y[i] for i in range(len(predictions)))
