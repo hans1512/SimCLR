@@ -20,11 +20,16 @@ def transform_data(data_loader, check_samples=False):
     # Return arrays
     return Xtrain2D, ytrain, Xtest2D, ytest
 
+
 def embed(config, save=True):
     dataloader = Loader(config, train=False)
     encoder = ContrastiveEncoder(config)
     encoder.load_models()
 
+    # Get original images and their labels
+    ((original_images, _), original_labels) = next(iter(dataloader.train_loader))
+
+    # Get embeddings and labels from the encoder
     x, y = encoder.predict(dataloader.train_loader)
     x = np.array(x)
     y = np.array(y)
@@ -33,7 +38,11 @@ def embed(config, save=True):
         save_path = path_from_config(config)
         np.save(f'./embeddings/x{save_path}.npy', x)
         np.save(f'./embeddings/y{save_path}.npy', y)
-    return x, y
+        # Also save the original images for plotting
+        np.save(f'./embeddings/original_images{save_path}.npy', original_images.numpy())
+        np.save(f'./embeddings/original_labels{save_path}.npy', original_labels.numpy())
+
+    return x, y, original_images, original_labels
 
 if __name__ == "__main__":
     config = get_config(get_arguments())

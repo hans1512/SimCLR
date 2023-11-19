@@ -75,13 +75,13 @@ def linear_model_eval(X_train, y_train, X_test, y_test, use_scaler=False, descri
     print("Train score:", clf.score(X_train, y_train))
     print("Test score:", clf.score(X_test, y_test))
 
-def transform_data(data_loader, check_samples=False):
+def transform_data(data_loader, check_samples=True):
     # Training dataset
     train_loader = data_loader.train_loader
     # Validation dataset
     test_loader = data_loader.test_loader
     # Show samples from training set
-    _ = show_samples(train_loader) if check_samples else None
+    show_samples(train_loader)
     # Get training and test data. Iterator returns a tuple of 3 variables. Pick the first ones as Xtrain, and Xtest
     ((Xtrain, _), ytrain) = next(iter(train_loader))
     ((Xtest, _), ytest)  = next(iter(test_loader))

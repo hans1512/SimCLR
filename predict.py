@@ -23,6 +23,7 @@ def predict(model, x, y):
         if predictions[i] == y[i]:
             correct += 1
 
+    print(correct)
     print(f"Accuracy: {correct / len(predictions)}")
 
 
