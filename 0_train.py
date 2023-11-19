@@ -64,14 +64,5 @@ if __name__ == "__main__":
     # Summarize config and arguments on the screen as a sanity check
     print_config_summary(config, args)
     # --If True, start of MLFlow for experiment tracking:
-    if config["mlflow"]:
-        # Experiment name
-        #mlflow.set_experiment(experiment_name=config["model_mode"]+"_"+str(args.experiment))
-        # Start a new mlflow run
-        #with mlflow.start_run():
-            # Run the main
-        main(config)
-    else:
-        # Run the main
-        main(config)
+    main(config)
 
